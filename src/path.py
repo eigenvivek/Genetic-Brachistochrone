@@ -1,3 +1,14 @@
+# Import 3rd party modules
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import integrate
+from math import sqrt
+from scipy.interpolate import interp1d
+
+# Import local modules
+import DNA
+from main import P1, P2
+
 class Path():
     """A class holding the attributes of an individual path."""
 
@@ -6,9 +17,9 @@ class Path():
 
         # Make a path
         if external_DNA == None:
-            self.dna = DNA()
+            self.dna = DNA.DNA()
         else:
-            self.dna = DNA(external_DNA)
+            self.dna = DNA.DNA(external_DNA)
 
 
     def evaluate(self):
@@ -40,18 +51,19 @@ class Path():
         xnew = np.linspace(0,1,1001)
 
         # Plot setup
-        plt.plot(self.dna.x, self.dna.y, 'o',         # Original points
-                 xnew, self.dna.f2(xnew), '--',       # Interpolated path
-                 xnew, [0]*len(xnew),                 # Cutoff line at y=0
-                 xnew, interp1d([p1[0],p2[0]],        # Linear
-                                [p1[1],p2[1]],
-                                kind='linear')(xnew)
-                )
+        plt.plot(self.dna.x, self.dna.y, 'o')                 # Original points
+        plt.plot(xnew, self.dna.f2(xnew), '--', label='Path') # Interpolated path
+        plt.plot(xnew, [0]*len(xnew), label='Cutoff')         # Cutoff line at y=0
+        plt.plot(xnew, interp1d([P1[0],P2[0]],
+                                [P1[1],P2[1]],
+                                kind='linear')(xnew))
+
         # Plot titles
         if title != None:
             plt.title(title)
         plt.xlabel('x')
         plt.ylabel('y')
+        plt.legend()
 
         # Render
         plt.show()

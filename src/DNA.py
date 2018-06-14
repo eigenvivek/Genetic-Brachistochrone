@@ -1,15 +1,24 @@
+# Import 3rd party modules
+from scipy.interpolate import UnivariateSpline
+from scipy.interpolate import interp1d
+import numpy as np
+
+# Import globals
+from main import MUTATION_RATE, BASES, P1, P2
+
+
 class DNA():
     """A class holding the function and geneology of a path."""
 
-    def __init__(self, external_genes=None, mutation_rate=0.1, bases=20):
+    def __init__(self, external_genes=None, mutation_rate=MUTATION_RATE, bases=BASES):
 
         # Constants
-        self.mutation_rate = mutation_rate
-        self.bases = bases
+        self.mutation_rate = MUTATION_RATE
+        self.bases = BASES
 
         # Make a path
         if external_genes == None:
-            path = self.generate_path(p1, p2)
+            path = self.generate_path()
         else:
             path = external_genes
 
@@ -22,12 +31,12 @@ class DNA():
         self.parent_A = path[3]
         self.parent_B = path[4]
 
-    def generate_path(self, p1, p2):
+    def generate_path(self):
         """Returns a path for the particle to follow."""
 
         # Seperate x's and y's
-        x = [p[0] for p in [p1,p2]]
-        y = [p[1] for p in [p1,p2]]
+        x = [p[0] for p in [P1,P2]]
+        y = [p[1] for p in [P1,P2]]
 
         # Linearly interpolate the two points
         f = interp1d(x, y, kind='linear')
@@ -41,9 +50,9 @@ class DNA():
 
             # Bound the curve at the two points p1 and p2
             if (coord == min(x)):
-                y.append(p1[1])
+                y.append(P1[1])
             elif (coord == max(x)):
-                y.append(p2[1])
+                y.append(P2[1])
 
             # For every point excluding the boundary, add uniform noise
             else:

@@ -1,7 +1,12 @@
+import matplotlib.pyplot as plt
+
 class Population():
     """A class holding a population of paths."""
 
     def __init__(self, n_paths=10):
+
+        # Import path
+        from path import Path
 
         # Generate a specified number of paths
         self.population_size = n_paths

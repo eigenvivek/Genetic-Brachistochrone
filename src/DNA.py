@@ -4,7 +4,7 @@ from scipy.interpolate import interp1d
 import numpy as np
 
 # Import globals
-from main import MUTATION_RATE, BASES, P1, P2
+from globals import MUTATION_RATE, BASES, P1, P2
 
 
 class DNA():

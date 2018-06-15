@@ -7,7 +7,7 @@ from scipy.interpolate import interp1d
 
 # Import local modules
 import DNA
-from main import P1, P2
+from globals import P1, P2
 
 class Path():
     """A class holding the attributes of an individual path."""
@@ -30,7 +30,7 @@ class Path():
 
         # Integrate dt over the domain [0,1]
         try:
-            T = integrate.quad(dt, a=0, b=1, limit=250)
+            T = integrate.quad(dt, a=0, b=1, limit=10)
             T_inv = T[0] ** (-1)
             err = T[1]
             self.valid = True

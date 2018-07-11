@@ -8,6 +8,44 @@
 \begin{document}
 \maketitle
 
+\section{Defining the Cost Function}
+Find the time required for a particle to travel a path $y=f(x)$ with endpoints $(x_0,f(x_0), (x_n, f(x_n))$. Assume a uniform gravitational field and that there are no nonconservative forces. Additionally, assume the particle traveling the path starts at rest.
 
+% Total energy
+Because we are assuming a uniform gravitational field, the total energy of the system as a function of x is
+\begin{equation}
+	E(x) = K + U_g = \frac{1}{2}mv(x)^2 + mgh(x) = \frac{1}{2}mv(x)^2 + mgf(x) \,.
+\end{equation}
+Additionally, because the system starts at rest, $K(x_0)=0 \,.$
+\
+% Solve for v(x)
+Because we assume energy is conserved throughout the system, $E(x) = E(x_0)$, 
+\
+By combining these equations, we can derive the following:
+\begin{subequations}
+	\begin{equation}
+		\frac{1}{2}mv(x)^2 + mgf(x) = mgf(x_0)
+	\end{equation}
+	\begin{equation}
+		v(x)^2 = 2g(f(x_0) - f(x)) 
+	\end{equation}
+	\begin{equation}
+		v(x) = \sqrt{2g(f(x_0) - f(x))} \,.
+	\end{equation}
+\end{subequations}
+\
+% Solve for ds 
+To find the differential displacement along the curve ($ds$) for a differential change in the x direction ($dx$), we can use the arc length formula:
+\begin{equation}
+	ds = dx \sqrt{1 + f'(x)^2} \,.
+\end{equation}
 
+% Solve for T
+The time required to travel a differential portion of $f(x)$ is given by $dt = \frac{ds}{v(x)}$. Thus, the total time $T$ required is as follows:
+\begin{equation}
+	\begin{split}
+		T(f(x)) = \int{dt} = \int_{x_0}^{x_n} \frac{ds}{v(x)} &= \int_{x_0}^{x_n} \sqrt{\frac{1 + f'(x)^2}{2g(f(x_0) - f(x))}}dx \\
+				        &\propto \int_{x_0}^{x_n} \sqrt{\frac{1 + f'(x)^2}{f(x_0) - f(x)}}dx \,.
+	\end{split}
+\end{equation}
 \end{document}

@@ -27,17 +27,19 @@ class Population():
         self.historical_error = []
         self.generation = 0
 
-    """Hidden functions for processing fitness and error."""
+    """Functions for processing fitness and error."""
     # 1. Calculate the T^(-1) for each path
-    cohort_evaluate = lambda self: [path.evaluate()[0] for path in self.population]
+    def cohort_evaluate(self):
+        return [path.evaluate()[0] for path in self.population]
     # 2. Calculate the error estimate
-    cohort_error = lambda self: [path.evaluate()[1] for path in self.population]
+    def cohort_error(self):
+        return [path.evaluate()[1] for path in self.population]
 
     def evaluate(self):
 
         # Evaluate the fitness, normalized fitness, and error
         self.fitness = [path.evaluate()[0] for path in self.population]
-        self.normalized_fitness = [F/max(self.fitness) for F in self.fitness]
+        self.normalized_fitness = [F / max(self.fitness) for F in self.fitness]
         self.error = [path.evaluate()[1] for path in self.population]
 
         # Save the measurements
@@ -61,7 +63,6 @@ class Population():
             # Add n copies of the path to the mating pool
             for j in range(n):
                 self.mating_pool.append(self.population[i])
-
 
     def generate_offspring(self):
         """Return new curve from 2 offspring in the mating pool."""
@@ -87,17 +88,15 @@ class Population():
 
         self.population = new_paths
 
-
     def next_generation(self):
         self.evaluate()
         self.assemble_pool()
         self.generate_offspring()
         self.generation += 1
 
-
     def hist_fitness_and_error(self, generation):
         """Return histograms of error and fitness."""
-        fig, ax = plt.subplots(figsize=(6,6/GOLDEN),
+        fig, ax = plt.subplots(figsize=(6, 6 / GOLDEN),
                                ncols=2, nrows=1)
 
         # Plot 1: normalized fitness histogram

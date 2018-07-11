@@ -40,28 +40,15 @@ class DNA():
         f = interp1d(x, y, kind='linear')
 
         # Make the domain
-        x = np.linspace(0, 1, self.bases)
-        y = []
-
-        # Fill in the range
-        for coord in x:
-
-            # Bound the curve at the two points p1 and p2
-            if (coord == min(x)):
-                y.append(P1[1])
-            elif (coord == max(x)):
-                y.append(P2[1])
-
-            # For every point excluding the boundary, add uniform noise
-            else:
-                y.append(f(coord) + np.random.uniform(-2, f(coord)))
+        x = np.linspace(P1[0], P2[0], self.bases)
+        y = [P1[1]] + [f(coord) + np.random.uniform(-2, f(coord))
+                       for coord in x[1:-1]] + [P2[1]]
 
         # Iterpolate the data (x, y) to create the path
         f2 = UnivariateSpline(x, y, k=4, s=0)
 
         # Return x-coords, y-coords, and interpolated function
         return x, y, f2, None, None
-
 
     def reproduction(self, partner):
         """Returns a genetic offspring of two paths."""
@@ -71,10 +58,10 @@ class DNA():
 
         # Create the child's y-path
         for i in range(len(child_y)):
-            if i < int(round((len(self.y)-1)/2)):
-                child_y[i] = self.y[i+1]
+            if i < int(round((len(self.y) - 1) / 2)):
+                child_y[i] = self.y[i + 1]
             else:
-                child_y[i] = partner.y[i+1]
+                child_y[i] = partner.y[i + 1]
 
             if 1 == 2:
                 for i in range(len(child_y)):
@@ -92,7 +79,7 @@ class DNA():
                 child_y[i] = np.random.uniform(0, -0.1)
 
         # Return the interpolated child path
-        x = np.linspace(0, 1, self.bases )
+        x = np.linspace(0, 1, self.bases)
         y = child_y
         f2 = UnivariateSpline(x, y, k=4, s=0)
         child = [x, y, f2, self, partner]

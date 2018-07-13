@@ -1,9 +1,7 @@
 from genetics.population import Population
-pop = Population(10)
-
-pop.evaluate()
-pop.visualize()
-
-
-if __name__ == '__main__':
-    pop = Population(10)
+import numpy as np
+pop = Population(25)
+for i in range(30):
+    pop.next_generation()
+    print(np.mean(pop.fitness))
+    pop.generation_best.visualize()

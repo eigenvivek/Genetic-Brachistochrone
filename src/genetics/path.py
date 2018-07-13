@@ -37,7 +37,7 @@ class Path():
 
         except:
             # Exception occurs if f(x)>0 for x in [0,1]
-            time = np.inf
+            time = -1
             err = 0
             self.valid = False
 

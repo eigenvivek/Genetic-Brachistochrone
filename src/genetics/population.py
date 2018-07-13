@@ -3,6 +3,7 @@ import numpy as np
 
 # Import path
 from genetics.path import Path
+from genetics.constants import GOLDEN
 
 
 class Population():
@@ -31,6 +32,7 @@ class Population():
     # 1. Calculate the T^(-1) for each path
     def cohort_evaluate(self):
         return [path.evaluate()[0] for path in self.population]
+
     # 2. Calculate the error estimate
     def cohort_error(self):
         return [path.evaluate()[1] for path in self.population]
@@ -46,19 +48,17 @@ class Population():
         self.historical_fitness.append(self.fitness)
         self.historical_error.append(self.error)
 
-    def visualize(self):
-        plt.hist(self.fitness)
-
     def assemble_pool(self):
         """Return a mating pool from the existing curves."""
+        self.mating_pool = []
         for i in range(len(self.population)):
 
-            if self.normalized_fitness[i] != 0:
+            if self.fitness[i] != -1:
                 # If the path is valid
-                n = int(self.normalized_fitness[i] * 100)
+                n = int(self.fitness[i])
             else:
                 # Else if the path is invalid
-                n = 0
+                continue
 
             # Add n copies of the path to the mating pool
             for j in range(n):
@@ -102,7 +102,7 @@ class Population():
         # Plot 1: normalized fitness histogram
         ax[0].hist(self.historical_fitness[generation])
         ax[0].set_title('Fitness Scores')
-        ax[0].set_xlabel('Score ' + r'($T^{-1})$')
+        ax[0].set_xlabel('Cost ' + r'($T$)')
         ax[0].set_ylabel('Frequency')
 
         # Plot 2: error histogram
@@ -113,5 +113,6 @@ class Population():
         ax[1].set_ylabel('Frequency')
 
         # Render
+        plt.suptitle(f'Generation {int(self.generation-1)}')
         plt.tight_layout()
         plt.show()

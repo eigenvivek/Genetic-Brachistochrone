@@ -41,7 +41,7 @@ class DNA():
 
         # Make the domain
         x = np.linspace(P1[0], P2[0], self.bases)
-        y = [P1[1]] + [f(coord) + np.random.uniform(-2, f(coord))
+        y = [P1[1]] + [f(coord) + np.random.uniform(-f(coord)-10, f(coord))
                        for coord in x[1:-1]] + [P2[1]]
 
         # Iterpolate the data (x, y) to create the path

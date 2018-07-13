@@ -15,34 +15,21 @@ class Population():
         self.population_size = n_paths
         self.population = [Path() for i in range(self.population_size)]
 
-        # Path evaluation
-        self.fitness = None
-        self.normalized_fitness = None
-        self.error = None
-
-        # Mating pool and parent selection
-        self.mating_pool = []
-
         # Historical records
         self.historical_fitness = []
         self.historical_error = []
         self.generation = 0
 
-    """Functions for processing fitness and error."""
-    # 1. Calculate the T^(-1) for each path
-    def cohort_evaluate(self):
-        return [path.evaluate()[0] for path in self.population]
-
-    # 2. Calculate the error estimate
-    def cohort_error(self):
-        return [path.evaluate()[1] for path in self.population]
-
     def evaluate(self):
 
-        # Evaluate the fitness, normalized fitness, and error
-        self.fitness = [path.evaluate()[0] for path in self.population]
-        self.normalized_fitness = [F / max(self.fitness) for F in self.fitness]
-        self.error = [path.evaluate()[1] for path in self.population]
+        # Path evaluation
+        self.fitness = []
+        self.error = []
+
+        for path in self.population:
+            path.evaluate()
+            self.fitness.append(path.time)
+            self.error.append(path.err)
 
         # Save the measurements
         self.historical_fitness.append(self.fitness)
@@ -50,14 +37,19 @@ class Population():
 
     def assemble_pool(self):
         """Return a mating pool from the existing curves."""
-        self.mating_pool = []
-        for i in range(len(self.population)):
 
-            if self.fitness[i] != -1:
-                # If the path is valid
-                n = int(self.fitness[i])
+        self.mating_pool = []
+        max_time = max(self.fitness)
+        best_time = np.inf
+
+        for i in range(self.population_size):
+
+            if self.population[i].is_valid:
+                if self.population[i].time < best_time:
+                    best_time = self.population[i].time
+                    self.generation_best = self.population[i]
+                n = int(max_time - self.population[i].time)
             else:
-                # Else if the path is invalid
                 continue
 
             # Add n copies of the path to the mating pool
@@ -77,8 +69,8 @@ class Population():
             parent_B = np.random.choice(self.mating_pool)
 
             # Remove parent_A and parent_B from mating pool
-            self.mating_pool.remove(parent_A)
-            self.mating_pool.remove(parent_B)
+            # self.mating_pool.remove(parent_A)
+            # self.mating_pool.remove(parent_B)
 
             # Create child using crossover function
             child = parent_A.dna.reproduction(parent_B.dna)

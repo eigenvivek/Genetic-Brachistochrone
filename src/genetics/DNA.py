@@ -48,16 +48,14 @@ class DNA():
         # Create child's y-path
         child_y = [P1[1], P2[1]]
         for i in range(BASES - 2):
-            if i < int(round((BASES - 2) / 2)):
-                child_y.insert(-1, self.y[i + 1])
-            else:
-                child_y.insert(-1, partner.y[i + 1])
+            nucleotide = np.random.choice([self, partner]).y[i + 1]
+            child_y.insert(-1, nucleotide)
 
         # Mutate the child's y-path
         for coord in self.x[1:-1]:
             # If the random float is less than the mutation rate, then that y-coord is random
             if np.random.uniform() < self.mutation_rate:
-                child_y[i] = f_linear(coord) + (-5 * np.random.uniform())
+                child_y[i] = f_linear(coord) + (-10 * np.random.uniform())
 
         # Return the interpolated child path
         x = np.linspace(0, 1, self.bases)

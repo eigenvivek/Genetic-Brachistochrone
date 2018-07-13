@@ -6,7 +6,7 @@ from math import sqrt
 from scipy.interpolate import interp1d
 
 from genetics.DNA import DNA
-from genetics.constants import P1, P2
+from genetics.constants import P1, P2, T
 
 
 class Path():
@@ -30,18 +30,17 @@ class Path():
 
         # Integrate dt over the domain [0,1]
         try:
-            T = integrate.quad(dt, a=0, b=1, limit=10)
-            time = T[0]
-            err = T[1]
+            T = integrate.quad(dt, a=P1[0], b=P2[0], limit=10)
+            self.time = T[0]
+            self.err = T[1]
             self.is_valid = True
 
         except:
             # Exception occurs if f(x)>0 for x in [0,1]
-            time = -1
-            err = 0
+            self.time = -1
+            self.err = 0
             self.is_valid = False
 
-        return time, err
 
     def visualize(self, title=None):
         """Returns a plot of the interpolated path."""
@@ -57,7 +56,13 @@ class Path():
         plt.plot(xnew, interp1d([P1[0], P2[0]],
                                 [P1[1], P2[1]],
                                 kind='linear')(xnew))
-        plt.text(0.8, 0, str(self.evaluate()[0]))
+
+        try:
+            plt.text(0.8, 0, str(self.time))
+        except:
+            self.evaluate()
+            plt.text(0.8, 0, str(self.time))
+        plt.text(0.8, -0.5, str(T))
 
         # Plot titles
         if title != None:

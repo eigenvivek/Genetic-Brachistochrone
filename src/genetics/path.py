@@ -33,13 +33,13 @@ class Path():
             T = integrate.quad(dt, a=0, b=1, limit=10)
             time = T[0]
             err = T[1]
-            self.valid = True
+            self.is_valid = True
 
         except:
             # Exception occurs if f(x)>0 for x in [0,1]
             time = -1
             err = 0
-            self.valid = False
+            self.is_valid = False
 
         return time, err
 

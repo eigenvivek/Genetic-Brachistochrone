@@ -1,8 +1,7 @@
 # Import 3rd party modules
 from scipy.interpolate import UnivariateSpline
-from scipy.interpolate import interp1d
 import numpy as np
-from genetics.constants import P1, P2, MUTATION_RATE, BASES
+from genetics.constants import P1, P2, MUTATION_RATE, BASES, f_linear
 
 
 class DNA():
@@ -32,16 +31,9 @@ class DNA():
     def generate_path(self):
         """Returns a path for the particle to follow."""
 
-        # Seperate x's and y's
-        x = [p[0] for p in [P1, P2]]
-        y = [p[1] for p in [P1, P2]]
-
-        # Linearly interpolate the two points
-        f = interp1d(x, y, kind='linear')
-
         # Make the domain
         x = np.linspace(P1[0], P2[0], self.bases)
-        y = [P1[1]] + [f(coord) + np.random.uniform(-f(coord)-10, f(coord))
+        y = [P1[1]] + [f_linear(coord) + (-10 * np.random.uniform())
                        for coord in x[1:-1]] + [P2[1]]
 
         # Iterpolate the data (x, y) to create the path
@@ -53,30 +45,19 @@ class DNA():
     def reproduction(self, partner):
         """Returns a genetic offspring of two paths."""
 
-        # Create empty array for the child's y-path
-        child_y = [0] * (len(self.y) - 2)
-
-        # Create the child's y-path
-        for i in range(len(child_y)):
-            if i < int(round((len(self.y) - 1) / 2)):
-                child_y[i] = self.y[i + 1]
+        # Create child's y-path
+        child_y = [P1[1], P2[1]]
+        for i in range(BASES - 2):
+            if i < int(round((BASES - 2) / 2)):
+                child_y.insert(-1, self.y[i + 1])
             else:
-                child_y[i] = partner.y[i + 1]
-
-            if 1 == 2:
-                for i in range(len(child_y)):
-                    # If the random float is less than the mutation rate, then that y-coord is random
-                    if np.random.uniform(0, 1) < self.mutation_rate:
-                        child_y[i] = np.random.uniform(-2, -0.1)
-
-        child_y.insert(0, 0)
-        child_y.insert(-1, self.y[-1])
+                child_y.insert(-1, partner.y[i + 1])
 
         # Mutate the child's y-path
-        for i in range(len(child_y)):
+        for coord in self.x[1:-1]:
             # If the random float is less than the mutation rate, then that y-coord is random
-            if np.random.uniform(0, 1) < self.mutation_rate:
-                child_y[i] = np.random.uniform(0, -0.1)
+            if np.random.uniform() < self.mutation_rate:
+                child_y[i] = f_linear(coord) + (-5 * np.random.uniform())
 
         # Return the interpolated child path
         x = np.linspace(0, 1, self.bases)

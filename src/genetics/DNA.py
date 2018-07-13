@@ -1,48 +1,45 @@
 # Import 3rd party modules
 from scipy.interpolate import UnivariateSpline
 import numpy as np
-from genetics.constants import P1, P2, MUTATION_RATE, BASES, f_linear
+from genetics.constants import P1, P2, MUTATION_RATE, BASES
+from genetics.curves import f_linear
 
 
 class DNA():
     """A class holding the function and geneology of a path."""
 
-    def __init__(self, external_genes=None, mutation_rate=MUTATION_RATE, bases=BASES):
+    def __init__(self, external_DNA=None, mutation_rate=MUTATION_RATE, bases=BASES):
 
         # Constants
         self.mutation_rate = MUTATION_RATE
         self.bases = BASES
 
         # Make a path
-        if external_genes == None:
-            path = self.generate_path()
+        self.x = np.linspace(P1[0], P2[0], self.bases)
+        if external_DNA == None:
+            genes = self.intialize_DNA()
         else:
-            path = external_genes
+            genes = external_DNA
 
         # Assign the x-coords, y-coods, and function as attributes
-        self.x = path[0]
-        self.y = path[1]
-        self.f2 = path[2]
+        self.y = genes[0]
+        self.f = genes[1]
 
-        # Geneology
-        self.parent_A = path[3]
-        self.parent_B = path[4]
-
-    def generate_path(self):
+    def intialize_DNA(self):
         """Returns a path for the particle to follow."""
 
         # Make the domain
-        x = np.linspace(P1[0], P2[0], self.bases)
-        y = [P1[1]] + [f_linear(coord) + (-10 * np.random.uniform())
-                       for coord in x[1:-1]] + [P2[1]]
+        y = [P1[1], P2[1]]
+        for coord in self.x[1:-1]:
+            y.insert(-1, f_linear(coord) + (-5 * np.random.uniform()))
 
         # Iterpolate the data (x, y) to create the path
-        f2 = UnivariateSpline(x, y, k=4, s=0)
+        f = UnivariateSpline(self.x, y, k=4, s=0)
 
         # Return x-coords, y-coords, and interpolated function
-        return x, y, f2, None, None
+        return [y, f]
 
-    def reproduction(self, partner):
+    def reproduce(self, partner):
         """Returns a genetic offspring of two paths."""
 
         # Create child's y-path
@@ -58,9 +55,7 @@ class DNA():
                 child_y[i] = f_linear(coord) + (-10 * np.random.uniform())
 
         # Return the interpolated child path
-        x = np.linspace(0, 1, self.bases)
         y = child_y
-        f2 = UnivariateSpline(x, y, k=4, s=0)
-        child = [x, y, f2, self, partner]
+        f = UnivariateSpline(self.x, y, k=4, s=0)
 
-        return child
+        return [y, f]

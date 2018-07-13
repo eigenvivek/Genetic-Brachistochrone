@@ -73,10 +73,10 @@ class Population():
             # self.mating_pool.remove(parent_B)
 
             # Create child using crossover function
-            child = parent_A.dna.reproduction(parent_B.dna)
+            child_DNA = parent_A.dna.reproduce(parent_B.dna)
 
             # Add new rocket to next generation
-            new_paths[i] = Path(external_DNA=child)
+            new_paths[i] = Path(external_DNA=child_DNA)
 
         self.population = new_paths
 
@@ -86,19 +86,19 @@ class Population():
         self.generate_offspring()
         self.generation += 1
 
-    def hist_fitness_and_error(self, generation):
+    def hist_fitness_and_error(self):
         """Return histograms of error and fitness."""
         fig, ax = plt.subplots(figsize=(6, 6 / GOLDEN),
                                ncols=2, nrows=1)
 
         # Plot 1: normalized fitness histogram
-        ax[0].hist(self.historical_fitness[generation])
+        ax[0].hist(self.historical_fitness[self.generation-1])
         ax[0].set_title('Fitness Scores')
         ax[0].set_xlabel('Cost ' + r'($T$)')
         ax[0].set_ylabel('Frequency')
 
         # Plot 2: error histogram
-        ax[1].hist(self.historical_error[generation])
+        ax[1].hist(self.historical_error[self.generation-1])
         ax[1].set_title('Error')
         ax[1].set_xscale('log')
         ax[1].set_xlabel('Error estimate')

@@ -4,7 +4,7 @@ import numpy as np
 
 # Local moduless
 from genetics.population import Population
-from genetics.visualize import visualize
+# from genetics.visualize import visualize
 
 # test
 if __name__ == '__main__':

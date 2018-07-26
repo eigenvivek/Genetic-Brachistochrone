@@ -5,7 +5,7 @@ from scipy import integrate
 import matplotlib.pyplot as plt
 
 from genetics.DNA import DNA
-from genetics.constants import P1, P2
+from genetics.constants import P1, P2, BASES
 
 
 class Path():
@@ -37,3 +37,17 @@ class Path():
             self.time = -1
             self.err = 0
             self.is_valid = False
+
+    def evaluate_linear(self):
+        slope = lambda i: (self.dna.y[i+1] - self.dna.y[i])/(self.dna.x[i+1] - self.dna.x[i])
+        velocity = 0
+        self.time = 0
+
+        for i in range(BASES-1):
+            ds = 1 + slope(i)**2
+            v = velocity**2 + (self.dna.y[i] - self.dna.y[i+1])
+            velocity = (velocity**2 + (self.dna.y[i] - self.dna.y[i+1])) ** 0.5
+
+            self.time += (ds/v)**0.5 * (self.dna.x[i+1] - self.dna.x[i])
+            self.is_valid = True
+            self.err = 0

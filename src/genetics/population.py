@@ -27,7 +27,7 @@ class Population():
         self.error = []
 
         for path in self.population:
-            path.evaluate()
+            path.evaluate_linear()
             self.fitness.append(path.time)
             self.error.append(path.err)
 

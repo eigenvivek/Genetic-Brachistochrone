@@ -24,8 +24,7 @@ def visualize(path, title=None):
     # plt.text(0.8, -0.5, str(T))
 
     # Plot titles
-    try:
-        plt.title(title)
+    plt.title(title)
     plt.xlabel('x')
     plt.ylabel('y')
     # plt.legend()

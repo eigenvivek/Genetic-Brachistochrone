@@ -26,8 +26,7 @@ def cycloid():
     """
 
     # First find theta2 from (x2, y2) numerically (by Newton-Rapheson).
-    def f(theta):
-        return -P2[1]/P2[0] - (1-np.cos(theta))/(theta-np.sin(theta))
+    f = lambda theta: -P2[1]/P2[0] - (1-np.cos(theta))/(theta-np.sin(theta))
     theta2 = newton(f, np.pi/2)
 
     # The radius of the circle generating the cycloid.

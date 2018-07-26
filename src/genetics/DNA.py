@@ -31,7 +31,7 @@ class DNA():
         # Make the domain
         y = [P1[1], P2[1]]
         for coord in self.x[1:-1]:
-            y.insert(-1, f_linear(coord) + (-5 * np.random.uniform()))
+            y.insert(-1, f_linear(coord) + (-2 * np.random.uniform()))
 
         # Iterpolate the data (x, y) to create the path
         f = UnivariateSpline(self.x, y, k=4, s=0)

@@ -13,10 +13,10 @@ if __name__ == '__main__':
 
     for generation in range(100):
         pop.next_generation()
-        visualize(pop.generation_best)
+        # visualize(pop.generation_best)
 
         print("Generation: {} \nMax fitness: {} | Average fitness: {}".format(
               generation, pop.generation_best.time, np.mean(pop.fitness))
               )
 
-        pop.hist_fitness_and_error()
+        # pop.hist_fitness_and_error()
